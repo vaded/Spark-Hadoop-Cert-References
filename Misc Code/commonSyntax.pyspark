@@ -1,0 +1,110 @@
+df = spark.read.table("tableName")
+df = spark.read.schema(schema).json("location/fileName.json")
+df = spark.read.parquet("/location/filename.parquet")
+test2DF = spark.read
+	.option("header","true")
+	.option("inferSchema","true")
+	.csv("/location/dir")
+
+#
+df["colName"] || df.colName
+df.show()
+df.explain(True)
+#SQL
+filter=(colName=="filterVariable")
+
+df.select("colName1",df.colName2)
+	.where(filter)
+	.groupBy("colName1",df.colName2)
+	.count()
+	.orderBy(df.colName.desc())
+	.withColumnRenamed("nameOrig","nameNew")
+	.show()
+
+spark.sql("SELECT * FROM tableName LIMIT 5").show()
+spark.sql("DESCRIBE tableName").show()
+
+joinedDF = df1.join(df2,df1.colName1== df2.colName2)
+#
+
+
+#
+from pyspark.sql.types import *
+cols = [[
+   StructField("long",LongType()),
+   StructField("string",StringType()),
+   StructField("timestamp",TimestampType())
+   ]
+ schema = StructType(cols)
+
+ df.printSchema()
+#
+df.write.mode("overwrite||").save("location")
+
+df.write.option("header","true")
+	.csv("/location/dir")
+
+df.write.parquet("/location/dir") 
+
+#
+for table in spark.catalog.listTables(): 
+  print table
+
+for column in spark.catalog.listColumns("tableName"): 
+   print column
+
+df.createOrReplaceTempView("viewName")
+
+###################################################
+#RDD
+
+import xml.etree.ElementTree as ElementTree
+
+rDDp = sc.textFile("/location/*")
+rDDp = sc.wholeTextFiles("location/dir")
+	.flatMap(lambda (filename,xmlstring): function(xmlstring))
+
+#
+rDD1 = rDDp
+	.filter(lambda line: len(line) > 20)
+	.map(lambda line: line.split(' ')) #create indv elements
+	.map(lambda words: (words[2],1)) #create binary pair
+	.reduceByKey(lambda count1,count2: count1 + count2) #sum values from binary pair
+
+countMap = rDD1.countByKey()
+print countMap
+
+#
+rDD1= rDDp
+	.map(lambda s: s.split(','))
+    .keyBy(lambda var: var[8])
+
+rDD = rDD1
+    .mapValues(lambda var: var[4] + ',' + var[3]) \
+	.groupByKey()
+#double for loop
+
+
+#must be binary
+rDD= rddL.join(rddR)
+#double for loop
+for (lvl1,lvl2) in rDD.sortByKey().take(10):
+   print lvl1, ":"
+   for var in lvl2: print "\t",lvl2
+
+rDD.getNumPartitions()
+print rDD.toDebugString()
+rDD.count()
+#transformation
+rDD = rDDL.union(rDDR)
+rDD = rDDL.zip(rDDR)
+rDD = rDDL.intersection(rDDR)
+rDD = rDDL.subtract(rDDR)
+# Return all the elements in the RDD as a list of strings
+lines = myRDD.collect()
+
+# Loop through and display the elements of the returned array
+for line in lines: print line
+
+#
+rDD.saveAsTextFile("/location/dir")
